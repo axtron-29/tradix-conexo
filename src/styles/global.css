@@ -11,7 +11,7 @@ body {
   color: var(--blanco);
   font-family: var(--fuente-texto);
   line-height: 1.5;
-  -webkit-font-smoothing: antialiased; /* Hace que las fuentes se vean más nítidas */
+  -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -19,6 +19,7 @@ h1, h2, h3, h4, h5, h6 {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700;
+  margin-bottom: 1rem;
 }
 
 a {
@@ -26,7 +27,6 @@ a {
   text-decoration: none;
 }
 
-/* Botón principal estilo streetwear */
 .btn-primario {
   display: inline-block;
   background-color: var(--blanco);
@@ -44,4 +44,46 @@ a {
 .btn-primario:hover {
   background-color: transparent;
   color: var(--blanco);
+}
+
+/* --- ESTILOS DEL NAVBAR --- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 5%;
+  border-bottom: 1px solid var(--borde);
+  background-color: var(--negro);
+}
+
+.navbar .logo a {
+  font-family: var(--fuente-titulos);
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 25px;
+}
+
+.nav-links a {
+  font-family: var(--fuente-texto);
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: var(--gris-claro);
+}
+
+/* Contenedor principal para dar margen a las páginas */
+.contenedor-principal {
+  padding: 40px 5%;
+  min-height: 80vh;
 }

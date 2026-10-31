@@ -1,13 +1,20 @@
 import { HashRouter, Routes, Route } from 'react-router-dom'
+import Navbar from './components/Navbar'
+import Home from './pages/Home'
+import Catalogo from './pages/Catalogo'
+import Contacto from './pages/Contacto'
 
 function App() {
   return (
     <HashRouter>
-      {/* Usamos HashRouter como pediste, es la mejor opción para evitar errores 404 en GitHub Pages */}
-      <main>
+      {/* El Navbar queda fuera de Routes para que se vea en TODAS las páginas */}
+      <Navbar />
+      
+      <main className="contenedor-principal">
         <Routes>
-          {/* Ruta temporal para comprobar que todo funciona */}
-          <Route path="/" element={<h1 style={{ textAlign: 'center', marginTop: '20vh' }}>TRADIX CONEXO</h1>} />
+          <Route path="/" element={<Home />} />
+          <Route path="/catalogo" element={<Catalogo />} />
+          <Route path="/contacto" element={<Contacto />} />
         </Routes>
       </main>
     </HashRouter>
