@@ -3,11 +3,11 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Catalogo from './pages/Catalogo'
 import Contacto from './pages/Contacto'
+import ProductoDetalle from './pages/ProductoDetalle' // <-- Importamos la página
 
 function App() {
   return (
     <HashRouter>
-      {/* El Navbar queda fuera de Routes para que se vea en TODAS las páginas */}
       <Navbar />
       
       <main className="contenedor-principal">
@@ -15,6 +15,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/catalogo" element={<Catalogo />} />
           <Route path="/contacto" element={<Contacto />} />
+          {/* Ruta dinámica: el :id representa cualquier número de producto */}
+          <Route path="/producto/:id" element={<ProductoDetalle />} /> 
         </Routes>
       </main>
     </HashRouter>
