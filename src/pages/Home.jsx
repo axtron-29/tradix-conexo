@@ -1,9 +1,11 @@
+import Hero from '../components/Hero'
+
 function Home() {
   return (
-    <section>
-      <h1>Inicio</h1>
-      <p>Bienvenido a Tradix Conexo. El futuro del streetwear y la tecnología.</p>
-    </section>
+    <>
+      <Hero />
+      {/* Más adelante agregaremos aquí una sección de "Productos Destacados" */}
+    </>
   )
 }
 

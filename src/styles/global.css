@@ -56,11 +56,9 @@ a {
   background-color: var(--negro);
 }
 
-.navbar .logo a {
-  font-family: var(--fuente-titulos);
-  font-size: 1.5rem;
-  font-weight: 900;
-  letter-spacing: 0.05em;
+.navbar-logo {
+  height: 40px; /* Tamaño del logo en la barra de navegación */
+  width: auto;
 }
 
 .nav-links {
@@ -82,8 +80,59 @@ a {
   color: var(--gris-claro);
 }
 
-/* Contenedor principal para dar margen a las páginas */
 .contenedor-principal {
-  padding: 40px 5%;
+  padding: 0;
   min-height: 80vh;
+}
+
+/* --- ESTILOS DEL HERO --- */
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 81px); /* Restamos el alto aproximado del navbar */
+  text-align: center;
+  padding: 40px 5%;
+}
+
+.hero-contenido {
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-logo-grande {
+  max-width: 250px;
+  margin-bottom: 2rem;
+  /* Le damos un leve brillo blanco al logo para que resalte sobre el negro */
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.15));
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 4rem); /* Texto responsive: crece según la pantalla */
+}
+
+.hero-texto {
+  font-family: var(--fuente-detalles);
+  font-size: 1.2rem;
+  color: var(--gris-claro);
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+}
+
+/* --- DISEÑO RESPONSIVE (MÓVILES) --- */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px 5%;
+  }
+  
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
 }
