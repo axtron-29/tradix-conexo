@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Unbounded:wght@400;700;900&display=swap');
+
+:root {
+  /* Paleta de colores B&W */
+  --negro: #0A0A0A;
+  --gris-oscuro: #141414;
+  --borde: #2A2A2A;
+  --gris-claro: #A0A0A0;
+  --blanco: #FFFFFF;
+
+  /* Tipografías */
+  --fuente-titulos: 'Unbounded', sans-serif;
+  --fuente-detalles: 'Playfair Display', serif;
+  --fuente-texto: 'Inter', sans-serif;
+}
