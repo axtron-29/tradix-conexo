@@ -1,83 +1,117 @@
+import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { supabase } from '../services/supabase'
 
 function ProductoDetalle() {
-  // Extraemos el ID de la URL
+  // useParams extrae el ID que está en la URL (ej. /producto/1)
   const { id } = useParams()
+  
+  const [producto, setProducto] = useState(null)
+  const [cargando, setCargando] = useState(true)
 
-  // Datos de prueba ampliados (luego vendrán de Supabase)
-  const productosPrueba = [
-    { 
-      id: 1, 
-      nombre: 'Gorra Tradix Classic', 
-      precio: 45000, 
-      categoria: 'Gorras', 
-      imagen: '',
-      descripcion: 'Gorra de ala plana con el logo de Tradix bordado en 3D. Ajustable y diseñada para el uso diario en la ciudad.',
-      caracteristicas: ['Material: 100% Algodón', 'Cierre ajustable tipo Snapback', 'Bordado frontal de alta densidad']
-    },
-    // Añadimos un producto genérico para que no falle si probamos otros IDs
-    { 
-      id: 99, 
-      nombre: 'Producto Tecnológico', 
-      precio: 120000, 
-      categoria: 'Tecnología', 
-      imagen: '',
-      descripcion: 'Alta tecnología con el mejor diseño urbano.',
-      caracteristicas: ['Calidad Premium', 'Garantía de 3 meses']
+  useEffect(() => {
+    const fetchProducto = async () => {
+      try {
+        // Buscamos en la tabla 'productos' donde el ID coincida con el de la URL
+        const { data, error } = await supabase
+          .from('productos')
+          .select('*')
+          .eq('id', id)
+          .single() // Usamos .single() porque solo queremos un producto exacto
+
+        if (error) throw error
+        
+        setProducto(data)
+      } catch (error) {
+        console.error("Error al cargar detalles:", error.message)
+      } finally {
+        setCargando(false)
+      }
     }
-  ]
 
-  // Buscamos el producto. Si no lo encuentra, usamos el genérico (id 99)
-  const producto = productosPrueba.find(p => p.id === parseInt(id)) || productosPrueba[1]
+    fetchProducto()
+  }, [id])
 
-  // Número de prueba para WhatsApp (luego lo haremos dinámico o usarás el tuyo)
-  const numeroWhatsApp = "573213561775" 
-  const mensajeWa = `Hola Tradix Conexo, me interesa el producto: ${producto.nombre} por $${producto.precio.toLocaleString('es-CO')}.`
-  const linkWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`
+  if (cargando) {
+    return <div style={{ textAlign: 'center', padding: '100px', color: 'var(--blanco)' }}>Cargando detalles...</div>
+  }
+
+  // Si no se encuentra el producto o hubo un error
+  if (!producto) {
+    return (
+      <div style={{ textAlign: 'center', padding: '100px', color: 'var(--blanco)' }}>
+        <h2>Producto no encontrado</h2>
+        <Link to="/catalogo" className="btn-primario" style={{ display: 'inline-block', marginTop: '20px' }}>
+          Volver al Catálogo
+        </Link>
+      </div>
+    )
+  }
+
+  // Formateamos el precio para que se vea como dinero colombiano (ej. $ 45.000)
+  const precioFormateado = new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0
+  }).format(producto.precio)
+
+  // Configuramos el enlace dinámico de WhatsApp
+  const numeroWhatsApp = "573000000000" // PON TU NÚMERO REAL AQUÍ
+  const mensajeWhatsApp = `Hola Tradix Conexo, me interesa el producto: ${producto.nombre} por ${precioFormateado}. ¿Aún está disponible?`
+  const linkWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWhatsApp)}`
 
   return (
-    <motion.div 
-      className="detalle-producto-container"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Link to="/catalogo" className="btn-volver">← Volver al Catálogo</Link>
-
-      <div className="detalle-grid">
-        <div className="detalle-imagen-wrapper">
+    <section className="seccion-detalle" style={{ padding: '40px 5%', maxWidth: '1000px', margin: '0 auto', minHeight: '80vh' }}>
+      <Link to="/catalogo" style={{ color: 'var(--gris-claro)', textDecoration: 'none', marginBottom: '20px', display: 'inline-block' }}>
+        &larr; Volver al catálogo
+      </Link>
+      
+      <motion.div 
+        style={{ display: 'flex', flexWrap: 'wrap', gap: '50px', marginTop: '20px' }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Imagen del producto */}
+        <div style={{ flex: '1 1 300px' }}>
           <img 
-            src={producto.imagen || 'https://via.placeholder.com/600x600/141414/FFFFFF?text=FOTO+DETALLE'} 
+            src={producto.imagen} 
             alt={producto.nombre} 
-            className="detalle-imagen"
+            style={{ width: '100%', borderRadius: '8px', border: '1px solid var(--borde)', objectFit: 'cover' }} 
           />
         </div>
-
-        <div className="detalle-info">
-          <span className="detalle-categoria">{producto.categoria}</span>
-          <h2>{producto.nombre}</h2>
-          <p className="detalle-precio">$ {producto.precio.toLocaleString('es-CO')}</p>
+        
+        {/* Información del producto */}
+        <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <span style={{ color: 'var(--gris-claro)', textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '2px' }}>
+            {producto.categoria}
+          </span>
           
-          <div className="detalle-descripcion">
-            <p>{producto.descripcion}</p>
-          </div>
-
-          <div className="detalle-caracteristicas">
-            <h3>Características:</h3>
-            <ul>
-              {producto.caracteristicas.map((caract, index) => (
-                <li key={index}>{caract}</li>
-              ))}
-            </ul>
-          </div>
-
-          <a href={linkWhatsApp} target="_blank" rel="noopener noreferrer" className="btn-primario btn-comprar">
+          <h1 style={{ fontSize: '2.5rem', marginBottom: '10px', fontFamily: 'var(--fuente-titulos)' }}>
+            {producto.nombre}
+          </h1>
+          
+          <h2 style={{ fontSize: '1.5rem', color: 'var(--blanco)', marginBottom: '20px', fontFamily: 'var(--fuente-texto)' }}>
+            {precioFormateado}
+          </h2>
+          
+          <p style={{ color: 'var(--gris-claro)', lineHeight: '1.6', marginBottom: '30px', fontFamily: 'var(--fuente-texto)' }}>
+            {producto.descripcion || 'Sin descripción disponible.'}
+          </p>
+          
+          <a 
+            href={linkWhatsApp} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="btn-primario" 
+            style={{ textAlign: 'center' }}
+          >
             Comprar por WhatsApp
           </a>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </section>
   )
 }
 
