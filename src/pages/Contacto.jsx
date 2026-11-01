@@ -11,7 +11,7 @@ function Contacto() {
       <div className="contacto-contenido">
         <div className="contacto-info">
           <h3>Soporte Directo</h3>
-          <p>WhatsApp: +57 321 356 1775</p>
+          <p>WhatsApp: +57 300 000 0000</p>
           <p>Email: soporte@tradixconexo.com</p>
           <p>Ubicación: Colombia</p>
           

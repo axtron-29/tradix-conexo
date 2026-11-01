@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { supabase } from '../services/supabase'
 
 function ContactForm() {
-  // Estado para guardar los datos del formulario
   const [formData, setFormData] = useState({
     nombre: '',
     correo: '',
     mensaje: ''
   })
+  
+  const [enviando, setEnviando] = useState(false)
+  const [estadoMensaje, setEstadoMensaje] = useState({ tipo: '', texto: '' })
 
-  // Función que se ejecuta cada vez que el usuario escribe algo
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -17,15 +19,33 @@ function ContactForm() {
     })
   }
 
-  // Función que se ejecuta al darle clic a "Enviar Mensaje"
-  const handleSubmit = (e) => {
-    e.preventDefault() // Evita que la página se recargue
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setEnviando(true)
+    setEstadoMensaje({ tipo: '', texto: '' }) 
     
-    // Por ahora mostraremos una alerta. En el próximo paso esto irá a Supabase.
-    alert(`Gracias ${formData.nombre}, pronto conectaremos esto a la base de datos.`)
-    
-    // Limpiamos el formulario después de enviar
-    setFormData({ nombre: '', correo: '', mensaje: '' }) 
+    try {
+      const { error } = await supabase
+        .from('mensajes')
+        .insert([
+          { 
+            nombre: formData.nombre, 
+            correo: formData.correo, 
+            mensaje: formData.mensaje 
+          }
+        ])
+
+      if (error) throw error 
+
+      setEstadoMensaje({ tipo: 'exito', texto: '¡Mensaje enviado correctamente! Te contactaremos pronto.' })
+      setFormData({ nombre: '', correo: '', mensaje: '' }) 
+
+    } catch (error) {
+      console.error("Error al enviar mensaje:", error.message)
+      setEstadoMensaje({ tipo: 'error', texto: 'Hubo un error al enviar el mensaje. Intenta de nuevo.' })
+    } finally {
+      setEnviando(false)
+    }
   }
 
   return (
@@ -45,6 +65,7 @@ function ContactForm() {
           value={formData.nombre} 
           onChange={handleChange} 
           required 
+          disabled={enviando}
         />
       </div>
       
@@ -57,6 +78,7 @@ function ContactForm() {
           value={formData.correo} 
           onChange={handleChange} 
           required 
+          disabled={enviando}
         />
       </div>
       
@@ -69,10 +91,23 @@ function ContactForm() {
           value={formData.mensaje} 
           onChange={handleChange} 
           required
+          disabled={enviando}
         ></textarea>
       </div>
       
-      <button type="submit" className="btn-primario">Enviar Mensaje</button>
+      {estadoMensaje.texto && (
+        <p style={{ 
+          color: estadoMensaje.tipo === 'exito' ? '#4ade80' : '#f87171', 
+          fontFamily: 'var(--fuente-texto)',
+          fontSize: '0.9rem'
+        }}>
+          {estadoMensaje.texto}
+        </p>
+      )}
+      
+      <button type="submit" className="btn-primario" disabled={enviando}>
+        {enviando ? 'Enviando...' : 'Enviar Mensaje'}
+      </button>
     </motion.form>
   )
 }

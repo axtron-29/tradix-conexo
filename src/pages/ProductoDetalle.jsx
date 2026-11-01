@@ -32,7 +32,7 @@ function ProductoDetalle() {
   const producto = productosPrueba.find(p => p.id === parseInt(id)) || productosPrueba[1]
 
   // Número de prueba para WhatsApp (luego lo haremos dinámico o usarás el tuyo)
-  const numeroWhatsApp = "573000000000" 
+  const numeroWhatsApp = "573213561775" 
   const mensajeWa = `Hola Tradix Conexo, me interesa el producto: ${producto.nombre} por $${producto.precio.toLocaleString('es-CO')}.`
   const linkWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWa)}`
 
